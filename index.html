@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sorry, Chinu</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Nunito:wght@400;600&display=swap">
+<style>
+:root{
+  color-scheme:light;
+  --bg:#fff4e6; --ink:#3a2230; --soft:#85505f; --accent:#c2415d; --line:#f0c6b8; --card:rgba(255,255,255,.75);
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Nunito',system-ui,sans-serif;line-height:1.7;overflow:hidden}
+h1,h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600;font-style:italic;margin:0 0 16px;line-height:1.1}
+h1{font-size:clamp(3rem,13vw,5.5rem);color:var(--accent)}
+h2{font-size:clamp(2.2rem,8vw,3.4rem)}
+p{max-width:34em;margin:0 0 12px;font-size:1.1rem}
+.soft{color:var(--soft)}
+#site{position:fixed;inset:0;overflow:hidden}
+.slide{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:safe center;text-align:center;overflow-y:auto;
+  padding:calc(24px + env(safe-area-inset-top,0px)) 24px 120px;
+  background:radial-gradient(circle at 50% 108%,rgba(255,160,110,.55),transparent 55%),linear-gradient(180deg,#fff4e6,#ffe1d2 55%,#f7cfe0);
+  opacity:0;visibility:hidden;transform:translateX(36px);transition:opacity .6s ease,transform .6s ease,visibility 0s .6s}
+.slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .6s ease,transform .6s ease}
+.slide.before{transform:translateX(-36px)}
+.promises{display:grid;gap:12px;max-width:30em;width:100%;margin-top:8px}
+.promises div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 18px;text-align:left}
+.choices{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+button{font:inherit;cursor:pointer;border:0;border-radius:999px;padding:12px 24px;background:var(--accent);color:#fff;font-weight:600}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+#answer{margin-top:22px;min-height:3em;font-family:'Cormorant Garamond',Georgia,serif;font-style:italic;font-size:1.7rem;color:var(--accent);max-width:20em}
+#nav{position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 18px calc(16px + env(safe-area-inset-bottom,0px))}
+#dots{display:flex;gap:8px}
+#dots i{width:8px;height:8px;border-radius:50%;background:var(--line);transition:all .3s}
+#dots i.on{background:var(--accent);width:22px;border-radius:6px}
+#prev.off,#next.off{visibility:hidden}
+@media (prefers-reduced-motion:reduce){.slide,.slide.active{transition:none}}
+</style>
+</head>
+<body>
+<main id="site">
+  <section class="slide">
+    <h1>Sorry, Chinu 🥺</h1>
+    <p class="soft">Main, Ayush, ye sirf tumhare liye bana raha hoon. Please end tak padhna.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Mujhse galti hui.</h2>
+    <p>Mujhe pata hai ki maine tumhe hurt kiya. Aur mujhe iska sach me bura lag raha hai.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Tumne kaisa feel kiya hoga</h2>
+    <p>Tum naraz ho, aur tumhara naraz hona galat nahi hai.</p>
+    <p>Tum mere liye bahut important ho, aur tumhari baat mujhe dhyan se sunni chahiye thi.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Koi bahana nahi</h2>
+    <p>Mere paas koi bahana nahi hai. Mujhe bas apni galti maanni hai.</p>
+    <p>Tum bahano se zyada deserve karti ho.</p>
+  </section>
+
+  <section class="slide">
+    <h2>Main kya karunga</h2>
+    <div class="promises">
+      <div>Apni galti se seekhunga.</div>
+      <div>Tumhari baat dhyan se sununga.</div>
+      <div>Dobara aisa na ho, iski poori koshish karunga.</div>
+    </div>
+  </section>
+
+  <section class="slide">
+    <h2>Kya tum mujhe maaf karogi?</h2>
+    <p class="soft">Jo bhi feel ho raha hai, wo theek hai. Koi pressure nahi hai.</p>
+    <div class="choices">
+      <button data-a="Thank you, Chinu. Main tumhara bharosa wapas jeetne ki poori koshish karunga. 🥰">Haan, maaf kiya</button>
+      <button class="ghost" data-a="Theek hai. Jitna time chahiye lo. Main kahin nahi ja raha.">Mujhe thoda time chahiye</button>
+    </div>
+    <div id="answer" role="status" aria-live="polite"></div>
+  </section>
+
+  <nav id="nav">
+    <button id="prev" class="ghost off">Peeche</button>
+    <div id="dots" aria-hidden="true"></div>
+    <button id="next">Aage padho</button>
+  </nav>
+</main>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)};
+  var slides=[].slice.call(document.querySelectorAll(".slide")),cur=0,dots=$("dots");
+  slides.forEach(function(){dots.appendChild(document.createElement("i"))});
+  function go(i){
+    cur=Math.max(0,Math.min(slides.length-1,i));
+    slides.forEach(function(el,k){
+      el.classList.toggle("active",k===cur);
+      el.classList.toggle("before",k<cur);
+      if(k===cur)el.scrollTop=0;
+    });
+    [].forEach.call(dots.children,function(d,k){d.classList.toggle("on",k===cur)});
+    $("prev").classList.toggle("off",cur===0);
+    $("next").classList.toggle("off",cur===slides.length-1);
+    $("next").textContent=cur===0?"Aage padho":"Aage";
+  }
+  $("next").addEventListener("click",function(){go(cur+1)});
+  $("prev").addEventListener("click",function(){go(cur-1)});
+  document.addEventListener("keydown",function(e){
+    if(e.key==="ArrowRight")go(cur+1);
+    if(e.key==="ArrowLeft")go(cur-1);
+  });
+  var tx=0,ty=0;
+  $("site").addEventListener("touchstart",function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+  $("site").addEventListener("touchend",function(e){
+    var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
+    if(Math.abs(dx)>70&&Math.abs(dy)<60)go(dx<0?cur+1:cur-1);
+  },{passive:true});
+  [].forEach.call(document.querySelectorAll(".choices button"),function(b){
+    b.addEventListener("click",function(){$("answer").textContent=b.getAttribute("data-a")});
+  });
+  go(0);
+})();
+</script>
+</body>
+</html>
